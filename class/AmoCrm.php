@@ -17,7 +17,34 @@ class AmoCrm
     }
 
     /* Добавить сделку */
+    public function addLeads($data)
+    {
+        $link = 'https://' . $this->subDomain . '.amocrm.ru/api/v2/leads';
+        $out = $this->curl->post($link, $data);
+        $this->errors($out['code']);
+        return json_decode($out['data'], true);
 
+    }
+
+    /* Список сделок */
+    public function listLeads($params)
+    {
+        $link = 'https://' . $this->subDomain . '.amocrm.ru/api/v2/leads?' . $params;
+        $out = $this->curl->get($link);
+        $this->errors($out['code']);
+        return json_decode($out['data'], true);
+    }
+
+    /* Добавить задачи к сделкам без задач */
+    public function addTaskLeadsWithoutTask($data)
+    {
+        $link = 'https://' . $this->subDomain . '.amocrm.ru/api/v2/tasks';
+        $out = $this->curl->post($link, $data);
+        $this->errors($out['code']);
+        return json_decode($out['data'], true);
+    }
+
+    /* Авторизация */
     private function auth()
     {
         $link = $link = 'https://' . $this->subDomain . '.amocrm.ru/private/api/auth.php?type=json';
@@ -26,8 +53,7 @@ class AmoCrm
         return json_decode($out['data'], true);
     }
 
-    /* Список сделок */
-
+    /* Ошибки */
     private function errors($code)
     {
         $code = (int)$code;
@@ -49,36 +75,5 @@ class AmoCrm
         } catch (Exception $E) {
             die('Ошибка: ' . $E->getMessage() . PHP_EOL . 'Код ошибки: ' . $E->getCode());
         }
-    }
-
-    /* Добавить задачи к сделкам без задач */
-
-    public function addLeads($data)
-    {
-        $link = 'https://' . $this->subDomain . '.amocrm.ru/api/v2/leads';
-        $out = $this->curl->post($link, $data);
-        $this->errors($out['code']);
-        return json_decode($out['data'], true);
-
-    }
-
-    /* Авторизация */
-
-    public function listLeads($params)
-    {
-        $link = 'https://' . $this->subDomain . '.amocrm.ru/api/v2/leads?' . $params;
-        $out = $this->curl->get($link);
-        $this->errors($out['code']);
-        return json_decode($out['data'], true);
-    }
-
-    /* Ошибки */
-
-    public function addTaskLeadsWithoutTask($data)
-    {
-        $link = 'https://' . $this->subDomain . '.amocrm.ru/api/v2/tasks';
-        $out = $this->curl->post($link, $data);
-        $this->errors($out['code']);
-        return json_decode($out['data'], true);
     }
 }
